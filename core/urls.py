@@ -26,8 +26,11 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.social.urls')),
-    
+
     path('api/product/', include('apps.product.urls')),
-    
+
+    path('api/account/', include('apps.account.urls')),
+    path('api/cart/', include('apps.cart.urls')),
+
     path('admin/', admin.site.urls),
 ]

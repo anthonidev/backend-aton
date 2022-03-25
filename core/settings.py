@@ -42,10 +42,12 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     'apps.user',
     'drf_yasg',
+    'apps.account',
 ]
 
 MAIN_APPS = [
     'apps.product',
+    'apps.cart',
 ]
 
 THIRD_PARTY_APPS = [
@@ -63,10 +65,8 @@ MIDDLEWARE = [
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
-
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -172,7 +172,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 3,
+    'PAGE_SIZE': 9,
 }
 
 SIMPLE_JWT = {

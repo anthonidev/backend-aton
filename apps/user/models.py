@@ -2,6 +2,8 @@ from datetime import datetime
 from django.db import models
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from apps.account.models import UserProfile
+from apps.cart.models import Cart
 
 
 class UserAccountManager(BaseUserManager):
@@ -12,6 +14,12 @@ class UserAccountManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
+
+        profile = UserProfile.objects.create(user=user)
+        profile.save()
+        
+        shopping_cart = Cart.objects.create(user=user)
+        shopping_cart.save()
 
         return user
 
@@ -35,7 +43,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     join = models.DateField(default=datetime.now)
 
     objects = UserAccountManager()
-
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']

@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 class Brand(models.Model):
     title = models.CharField(max_length=200, unique=True)
     is_featured = models.BooleanField(default=False)
-    logo=models.CharField(max_length=200)
+    photo = CloudinaryField('Image', overwrite=True, format="png",blank=True,null=True)
    
     def __str__(self):
         return self.title
@@ -18,7 +18,7 @@ class Category(models.Model):
     title = models.CharField(max_length=200, unique=True)
     parent = models.ForeignKey('self',related_name='children', on_delete=models.CASCADE ,blank=True,null=True)
     is_featured = models.BooleanField(default=False)
-    photo = CloudinaryField('Image', overwrite=True, format="jpg")
+    photo = CloudinaryField('Image', overwrite=True, format="jpg",blank=True,null=True)
     slug = models.SlugField(max_length=255, null=True, blank=True)
     description = models.TextField(max_length=200)
 

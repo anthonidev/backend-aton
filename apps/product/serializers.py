@@ -5,6 +5,7 @@ from .models import Category, Product, Brand
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        
         fields = [
             'id',
             'title',
@@ -47,6 +48,7 @@ class BrandSerializer(serializers.ModelSerializer):
 #             'get_absolute_url',
 #         ]
 class ProductSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Product
         fields = [
@@ -57,4 +59,5 @@ class ProductSerializer(serializers.ModelSerializer):
             'compare_price',
             'photo',
             'slug',
+            'quantity',
         ]

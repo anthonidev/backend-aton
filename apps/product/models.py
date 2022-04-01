@@ -56,13 +56,13 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
     date_added = models.DateTimeField(default=datetime.now)
-
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
     sold = models.IntegerField(default=0)
     photo = CloudinaryField('Image', overwrite=True, format="jpg")
+    description=models.TextField(blank=True,null=True)
 
     class Meta:
         ordering = ('-date_added',)

@@ -48,6 +48,7 @@ PROJECT_APPS = [
 MAIN_APPS = [
     'apps.product',
     'apps.cart',
+    'apps.wishlist',
 ]
 
 THIRD_PARTY_APPS = [

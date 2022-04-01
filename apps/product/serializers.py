@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, Brand
+from .models import Category, CharacteristicProduct, Product, Brand, ProductImage
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,6 +28,28 @@ class BrandSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'id',
+            'get_category',
+            'title',
+            'price',
+            'compare_price',
+            'is_featured',
+            'quantity',
+            'date_added',
+            'slug',
+            'num_visits',
+            'last_visit',
+            'sold',
+            'photo',
+            'get_absolute_url',
+            'description'
+        ]
+        
+        
 # class ProductSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Product
@@ -37,27 +59,23 @@ class BrandSerializer(serializers.ModelSerializer):
 #             'title',
 #             'price',
 #             'compare_price',
-#             'is_featured',
-#             'quantity',
-#             'date_added',
-#             'slug',
-#             'num_visits',
-#             'last_visit',
-#             'sold',
 #             'photo',
-#             'get_absolute_url',
+#             'slug',
+#             'quantity',
 #         ]
-class ProductSerializer(serializers.ModelSerializer):
+class CharacteristicProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CharacteristicProduct
+        
+        fields = [
+            
+            'title',
+        ]
+class ProductImageSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Product
+        model = ProductImage
         fields = [
             'id',
-            'get_category',
-            'title',
-            'price',
-            'compare_price',
             'photo',
-            'slug',
-            'quantity',
         ]

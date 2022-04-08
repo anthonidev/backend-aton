@@ -10,6 +10,7 @@ from .models import Category, CharacteristicProduct, Product, Brand, ProductImag
 from .serializers import CategorySerializer, CharacteristicProductSerializer, ProductImageSerializer, ProductSerializer, BrandSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 
 
 class ListBrandView(generics.ListAPIView):
@@ -23,16 +24,33 @@ class ListBrandView(generics.ListAPIView):
 
 
 class ListCategoryView(generics.ListAPIView):
-    serializer_class = CategorySerializer
-    pagination_class = PageNumberPagination
+    pagination_class = None
     permission_classes = (permissions.AllowAny, )
 
     def get(self, request, format=None, *args, **kwargs):
-        category = Category.objects.all()
-        page = self.paginate_queryset(category)
-        if category and page is not None:
-            return self.get_paginated_response(self.serializer_class(category, many=True).data)
-        return Response('Not found', status=status.HTTP_404_NOT_FOUND)
+        categories = Category.objects.all()
+
+        result = []
+
+        for category in categories:
+            if not category.parent:
+                item = {}
+                item['id'] = category.id
+                item['title'] = category.title
+                item['photo'] = category.photo
+
+                item['sub_categories'] = []
+                for cat in categories:
+                    sub_item = {}
+                    if cat.parent and cat.parent.id == category.id:
+                        sub_item['id'] = cat.id
+                        sub_item['title'] = cat.title
+                        sub_item['photo'] = cat.photo
+                        sub_item['sub_categories'] = []
+
+                        item['sub_categories'].append(sub_item)
+                result.append(item)
+        return Response({'categories': result}, status=status.HTTP_200_OK)
 
 
 class ListProductHomeView(generics.ListAPIView):
@@ -84,16 +102,18 @@ class ProductDetailView(generics.ListAPIView):
                 num_visits=product.num_visits + 1,
                 last_visit=timezone.now(),
             )
-            characteristic=[]
-            images=[]
+            characteristic = []
+            images = []
             if CharacteristicProduct.objects.filter(product=product).exists():
-                characteristic=CharacteristicProduct.objects.filter(product=product)
+                characteristic = CharacteristicProduct.objects.filter(
+                    product=product)
             if ProductImage.objects.filter(product=product).exists():
-                images=ProductImage.objects.filter(product=product)
-                
-            characteristic=CharacteristicProductSerializer(characteristic,many=True)
-            images=ProductImageSerializer(images,many=True)
-            
+                images = ProductImage.objects.filter(product=product)
+
+            characteristic = CharacteristicProductSerializer(
+                characteristic, many=True)
+            images = ProductImageSerializer(images, many=True)
+
             return Response({
                 'characteristic': characteristic.data,
                 'images': images.data,
@@ -106,3 +126,69 @@ class ProductDetailView(generics.ListAPIView):
             return Response(
                 {'error': 'Product with this ID does not exist'},
                 status=status.HTTP_404_NOT_FOUND)
+
+
+class ListBySearchView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    pagination_class = PageNumberPagination
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, request, format=None, *args, **kwargs):
+        data = self.request.data
+
+        categories = data['categories']
+        brands = data['brands']
+        order = data['order']
+        sort_by = data['sort_by']
+        price_range = data['price_range']
+        featured = data['featured']
+
+        product_results = Product.objects.all()
+        if len(categories) == 0:
+            product_results = product_results
+        else:
+            filtered_categories = []
+            for cat in categories:
+                filtered_categories.append(cat)
+            product_results = Product.objects.filter(
+                category__in=filtered_categories)
+
+        if len(brands) == 0:
+            product_results = product_results
+        else:
+            filtered_brands = []
+            for brand in brands:
+                filtered_brands.append(brand)
+            product_results = product_results.filter(brand__in=filtered_brands)
+
+        if not (sort_by == 'date_added' or sort_by == 'price' or sort_by == 'sold' or sort_by == 'name'):
+            sort_by = 'date_added'
+
+        if order == 'desc':
+            sort_by = '-' + sort_by
+            product_results = product_results.order_by(sort_by)
+        elif order == 'asc':
+            product_results = product_results.order_by(sort_by)
+        else:
+            product_results = product_results.order_by(sort_by)
+
+         # Filtrar por precio
+        if price_range == '1 - 50':
+            product_results = product_results.filter(price__gte=1)
+            product_results = product_results.filter(price__lt=51)
+        elif price_range == '51 - 70':
+            product_results = product_results.filter(price__gte=51)
+            product_results = product_results.filter(price__lt=71)
+        elif price_range == '71 - 90':
+            product_results = product_results.filter(price__gte=71)
+            product_results = product_results.filter(price__lt=91)
+        elif price_range == '91 - 119':
+            product_results = product_results.filter(price__gte=91)
+            product_results = product_results.filter(price__lt=120)
+        elif price_range == 'Más de 120':
+            product_results = product_results.filter(price__gte=120)
+
+        page = self.paginate_queryset(product_results)
+        if product_results and page is not None:
+            return self.get_paginated_response(self.serializer_class(product_results, many=True).data)
+        return Response('Not found', status=status.HTTP_404_NOT_FOUND)

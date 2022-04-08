@@ -18,4 +18,4 @@ class WishListItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.product.title
+        return self.product.title 

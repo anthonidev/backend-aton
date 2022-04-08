@@ -12,6 +12,8 @@ def getWishlist(user, request):
 
     result = []
     if WishListItem.objects.filter(wishlist=wishlist).exists():
+        
+        
         for wishlist_item in wishlist_items:
             item = {}
             item['id'] = wishlist_item.id
@@ -32,7 +34,7 @@ class GetItemsView(APIView):
         user = self.request.user
         try:
             result = getWishlist(user, request)
-            total_items = getWishlist(user)
+            total_items = getItemTotal(user)
             return Response({
                 'wishlist': result,
                 'total_items': total_items,
@@ -85,7 +87,7 @@ class AddItemView(APIView):
                 )
 
             result = getWishlist(user, request)
-            total_items = getWishlist(user)
+            total_items = getItemTotal(user)
 
             return Response({
                 'wishlist': result,
@@ -137,7 +139,7 @@ class RemoveItemView(APIView):
                 )
 
             result = getWishlist(user, request)
-            total_items = getWishlist(user)
+            total_items = getItemTotal(user)
             return Response({
                 'wishlist': result,
                 'total_items': total_items,

@@ -62,14 +62,15 @@ class Product(models.Model):
     last_visit = models.DateTimeField(blank=True, null=True)
     sold = models.IntegerField(default=0)
     photo = CloudinaryField('Image', overwrite=True, format="jpg")
-    description=models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('-date_added',)
 
     def get_category(self):
         return self.category.title
-
+    def get_brand(self):
+            return self.brand.title
     def get_absolute_url(self):
         return '/%s/%s/' % (self.category.slug, self.slug)
 

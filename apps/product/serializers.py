@@ -34,6 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'get_category',
+            'get_brand',
             'title',
             'price',
             'compare_price',

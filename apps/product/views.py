@@ -133,7 +133,7 @@ class ListBySearchView(generics.ListAPIView):
     pagination_class = PageNumberPagination
     permission_classes = (permissions.AllowAny, )
 
-    def get(self, request, format=None, *args, **kwargs):
+    def post(self, request, format=None, *args, **kwargs):
         data = self.request.data
 
         categories = data['categories']
@@ -141,7 +141,6 @@ class ListBySearchView(generics.ListAPIView):
         order = data['order']
         sort_by = data['sort_by']
         price_range = data['price_range']
-        featured = data['featured']
 
         product_results = Product.objects.all()
         if len(categories) == 0:

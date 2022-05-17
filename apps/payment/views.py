@@ -20,10 +20,10 @@ class GetPaymentTotalView(APIView):
 
         # tax = 0.18
 
-        shipping_id = request.query_params.get('shipping_id')
+        shipping_id = request.query_params.get("shipping_id")
         shipping_id = str(shipping_id)
 
-        coupon_code = request.query_params.get('coupon_code')
+        coupon_code = request.query_params.get("coupon_code")
         coupon_code = str(coupon_code)
 
         try:
@@ -32,8 +32,8 @@ class GetPaymentTotalView(APIView):
             # revisar si existen iitems
             if not CartItem.objects.filter(cart=cart).exists():
                 return Response(
-                    {'error': 'Need to have items in cart'},
-                    status=status.HTTP_404_NOT_FOUND
+                    {"error": "Need to have items in cart"},
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             cart_items = CartItem.objects.filter(cart=cart)
@@ -41,24 +41,25 @@ class GetPaymentTotalView(APIView):
             for cart_item in cart_items:
                 if not Product.objects.filter(id=cart_item.product.id).exists():
                     return Response(
-                        {'error': 'A proudct with ID provided does not exist'},
-                        status=status.HTTP_404_NOT_FOUND
+                        {"error": "A proudct with ID provided does not exist"},
+                        status=status.HTTP_404_NOT_FOUND,
                     )
                 if int(cart_item.count) > int(cart_item.product.quantity):
                     return Response(
-                        {'error': 'Not enough items in stock'},
-                        status=status.HTTP_200_OK
+                        {"error": "Not enough items in stock"},
+                        status=status.HTTP_200_OK,
                     )
 
                 total_amount = 0.0
                 total_after_coupon = 0.0
                 for cart_item in cart_items:
-                    total_amount += (float(cart_item.product.price)
-                                     * float(cart_item.count))
+                    total_amount += float(cart_item.product.price) * float(
+                        cart_item.count
+                    )
 
                 original_price = round(total_amount, 2)
                 # Cupones
-                if coupon_code != '' and coupon_code != 'default':
+                if coupon_code != "" and coupon_code != "default":
                     # Revisar si cupon de precio fijo es valido
                     if Coupon.objects.filter(code__iexact=coupon_code).exists():
                         price_coupon = Coupon.objects.get(code=coupon_code)
@@ -87,20 +88,23 @@ class GetPaymentTotalView(APIView):
 
                 total_amount = round(total_amount, 2)
 
-                return Response({
-                    'original_price': f'{original_price:.2f}',
-                    'total_after_coupon': f'{total_after_coupon:.2f}',
-                    'total_amount': f'{total_amount:.2f}',
-                    # 'estimated_tax': f'{estimated_tax:.2f}',
-                    'shipping_cost': f'{shipping_cost:.2f}'
-                },
-                    status=status.HTTP_200_OK
+                return Response(
+                    {
+                        "original_price": f"{original_price:.2f}",
+                        "total_after_coupon": f"{total_after_coupon:.2f}",
+                        "total_amount": f"{total_amount:.2f}",
+                        # 'estimated_tax': f'{estimated_tax:.2f}',
+                        "shipping_cost": f"{shipping_cost:.2f}",
+                    },
+                    status=status.HTTP_200_OK,
                 )
 
         except:
             return Response(
-                {'error': 'Something went wrong when retrieving payment total information'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "error": "Something went wrong when retrieving payment total information"
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
@@ -109,22 +113,21 @@ class ProcessPaymentView(APIView):
         user = self.request.user
         data = self.request.data
 
-        shipping_id = str(data['shipping_id'])
-        coupon_code = str(data['coupon_code'])
+        shipping_id = str(data["shipping_id"])
+        coupon_code = str(data["coupon_code"])
 
-        full_name = data['full_name']
-        address_line_1 = data['address_line_1']
-        address_line_2 = data['address_line_2']
-        city = data['city']
-        district = data['district']
-        postal_zip_code = data['zipcode']
-        telephone_number = data['telephone_number']
+        full_name = data["full_name"]
+        address_line_1 = data["address_line_1"]
+        address_line_2 = data["address_line_2"]
+        city = data["city"]
+        district = data["district"]
+        postal_zip_code = data["zipcode"]
+        telephone_number = data["telephone_number"]
 
         # revisar si datos de shipping son validos
         if not Shipping.objects.filter(id__iexact=shipping_id).exists():
             return Response(
-                {'error': 'Invalid shipping option'},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": "Invalid shipping option"}, status=status.HTTP_404_NOT_FOUND
             )
 
         cart = Cart.objects.get(user=user)
@@ -132,8 +135,8 @@ class ProcessPaymentView(APIView):
         # revisar si usuario tiene items en carrito
         if not CartItem.objects.filter(cart=cart).exists():
             return Response(
-                {'error': 'Need to have items in cart'},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": "Need to have items in cart"},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         cart_items = CartItem.objects.filter(cart=cart)
@@ -143,30 +146,26 @@ class ProcessPaymentView(APIView):
         for cart_item in cart_items:
             if not Product.objects.filter(id=cart_item.product.id).exists():
                 return Response(
-                    {'error': 'Transaction failed, a proudct ID does not exist'},
-                    status=status.HTTP_404_NOT_FOUND
+                    {"error": "Transaction failed, a proudct ID does not exist"},
+                    status=status.HTTP_404_NOT_FOUND,
                 )
             if int(cart_item.count) > int(cart_item.product.quantity):
                 return Response(
-                    {'error': 'Not enough items in stock'},
-                    status=status.HTTP_200_OK
+                    {"error": "Not enough items in stock"}, status=status.HTTP_200_OK
                 )
 
         total_amount = 0.0
 
         for cart_item in cart_items:
-            total_amount += (float(cart_item.product.price)
-                             * float(cart_item.count))
+            total_amount += float(cart_item.product.price) * float(cart_item.count)
 
         # Cupones
 
-        price_coupon = ''
+        price_coupon = ""
 
-        if coupon_code != '' and coupon_code != 'default':
+        if coupon_code != "" and coupon_code != "default":
             if Coupon.objects.filter(code__iexact=coupon_code).exists():
-                price_coupon = Coupon.objects.get(
-                    code=coupon_code
-                )
+                price_coupon = Coupon.objects.get(code=coupon_code)
 
                 discount_amount = float(price_coupon.value)
                 price_coupon.use
@@ -200,7 +199,7 @@ class ProcessPaymentView(APIView):
         try:
             order = Order.objects.create(
                 user=user,
-                transaction_id=full_name+total_amount+postal_zip_code,
+                transaction_id=full_name + total_amount + postal_zip_code,
                 amount=total_amount,
                 full_name=full_name,
                 address_line_1=address_line_1,
@@ -215,8 +214,8 @@ class ProcessPaymentView(APIView):
             )
         except:
             return Response(
-                {'error': 'Transaction succeeded but failed to create the order'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": "Transaction succeeded but failed to create the order"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         for cart_item in cart_items:
@@ -229,31 +228,37 @@ class ProcessPaymentView(APIView):
                     order=order,
                     name=product.title,
                     price=cart_item.product.price,
-                    count=cart_item.count
+                    count=cart_item.count,
                 )
             except:
                 return Response(
-                    {'error': 'Transaction succeeded and order created, but failed to create an order item'},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    {
+                        "error": "Transaction succeeded and order created, but failed to create an order item"
+                    },
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
 
         try:
             send_mail(
-                'Your Order Details',
-                'Hey ' + full_name + ','
-                + '\n\nWe recieved your order!'
-                + '\n\nGive us some time to process your order and ship it out to you.'
-                + '\n\nYou can go on your user dashboard to check the status of your order.'
-                + '\n\nSincerely,'
-                + '\nShop Time',
-                'mail@mail.com',
+                "Your Order Details",
+                "Hey "
+                + full_name
+                + ","
+                + "\n\nWe recieved your order!"
+                + "\n\nGive us some time to process your order and ship it out to you."
+                + "\n\nYou can go on your user dashboard to check the status of your order."
+                + "\n\nSincerely,"
+                + "\nShop Time",
+                "mail@mail.com",
                 [user.email],
-                fail_silently=False
+                fail_silently=False,
             )
         except:
             return Response(
-                {'error': 'Transaction succeeded and order created, but failed to send email'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "error": "Transaction succeeded and order created, but failed to send email"
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         try:
@@ -265,11 +270,13 @@ class ProcessPaymentView(APIView):
 
         except:
             return Response(
-                {'error': 'Transaction succeeded and order successful, but failed to clear cart'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "error": "Transaction succeeded and order successful, but failed to clear cart"
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         return Response(
-            {'success': 'Transaction successful and order was created'},
-            status=status.HTTP_200_OK
+            {"success": "Transaction successful and order was created"},
+            status=status.HTTP_200_OK,
         )

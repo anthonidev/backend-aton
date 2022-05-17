@@ -7,12 +7,12 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
 
         fields = [
-            'id',
-            'title',
-            'is_featured',
-            'photo',
-            'slug',
-            'description',
+            "id",
+            "title",
+            "is_featured",
+            "photo",
+            "slug",
+            "description",
         ]
 
 
@@ -20,10 +20,10 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = [
-            'id',
-            'title',
-            'is_featured',
-            'photo',
+            "id",
+            "title",
+            "is_featured",
+            "photo",
         ]
 
 
@@ -31,22 +31,22 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id',
-            'get_category',
-            'get_brand',
-            'title',
-            'price',
-            'compare_price',
-            'is_featured',
-            'quantity',
-            'date_added',
-            'slug',
-            'num_visits',
-            'last_visit',
-            'sold',
-            'photo',
-            'get_absolute_url',
-            'description'
+            "id",
+            "get_category",
+            "get_brand",
+            "title",
+            "price",
+            "compare_price",
+            "is_featured",
+            "quantity",
+            "date_added",
+            "slug",
+            "num_visits",
+            "last_visit",
+            "sold",
+            "photo",
+            "get_absolute_url",
+            "description",
         ]
 
 
@@ -68,15 +68,14 @@ class CharacteristicProductSerializer(serializers.ModelSerializer):
         model = CharacteristicProduct
 
         fields = [
-            'title',
+            "title",
         ]
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ProductImage
         fields = [
-            'id',
-            'photo',
+            "id",
+            "photo",
         ]

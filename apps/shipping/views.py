@@ -14,7 +14,7 @@ class GetShippingView(APIView):
             shipping_options = ShippingSerializer(shipping_options, many=True)
 
             return Response(
-                {'shipping_options': shipping_options.data},
+                {'shipping': shipping_options.data},
                 status=status.HTTP_200_OK
             )
         else:

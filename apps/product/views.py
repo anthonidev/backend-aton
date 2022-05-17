@@ -1,4 +1,5 @@
 
+from cmath import log
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import generics
@@ -11,6 +12,7 @@ from .serializers import CategorySerializer, CharacteristicProductSerializer, Pr
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
+import random
 
 
 class ListBrandView(generics.ListAPIView):
@@ -29,25 +31,32 @@ class ListCategoryView(generics.ListAPIView):
 
     def get(self, request, format=None, *args, **kwargs):
         categories = Category.objects.all()
-
+        products = Product.objects.all()
+        print(products.count())
         result = []
 
         for category in categories:
             if not category.parent:
+                total = products.filter(category=category).count()
                 item = {}
                 item['id'] = category.id
                 item['title'] = category.title
                 item['photo'] = category.photo
-
+                item['slug'] = category.slug
+                item['description'] = category.description
+                item['total'] = total
                 item['sub_categories'] = []
                 for cat in categories:
                     sub_item = {}
+                    total = products.filter(category=cat).count()
                     if cat.parent and cat.parent.id == category.id:
                         sub_item['id'] = cat.id
                         sub_item['title'] = cat.title
                         sub_item['photo'] = cat.photo
                         sub_item['sub_categories'] = []
-
+                        sub_item['slug'] = cat.slug
+                        sub_item['description'] = cat.description
+                        sub_item['total'] = total
                         item['sub_categories'].append(sub_item)
                 result.append(item)
         return Response({'categories': result}, status=status.HTTP_200_OK)
@@ -84,7 +93,7 @@ class ProductDetailView(generics.ListAPIView):
             product = Product.objects.get(slug=slug)
 
             related_products = product.category.products.filter(
-                parent=None).exclude(id=product.id)
+                parent=None).order_by("?").exclude(id=product.id)
 
             if product.variants.all():
                 products_colors = list(
@@ -94,6 +103,7 @@ class ProductDetailView(generics.ListAPIView):
                     product.parent.variants.all().exclude(id=product.id))
                 related_products = list(product.category.products.filter(
                     parent=None).exclude(id=product.parent.id))
+
                 products_colors.append(product.parent)
             else:
                 products_colors = []
@@ -113,11 +123,11 @@ class ProductDetailView(generics.ListAPIView):
             characteristic = CharacteristicProductSerializer(
                 characteristic, many=True)
             images = ProductImageSerializer(images, many=True)
-
+          
             return Response({
                 'characteristic': characteristic.data,
                 'images': images.data,
-                'related': self.serializer_class(related_products, many=True).data,
+                'related': self.serializer_class(related_products, many=True).data[:4],
                 'colors': self.serializer_class(products_colors, many=True).data,
                 'product': self.serializer_class(product).data,
             }, status=status.HTTP_200_OK)
@@ -148,12 +158,17 @@ class ListBySearchView(generics.ListAPIView):
         else:
             filtered_categories = []
             for cat in categories:
+                print(cat)
                 filtered_categories.append(cat)
-            product_results = Product.objects.filter(
+            print(product_results)
+
+            product_results = product_results.filter(
                 category__in=filtered_categories)
+            print(product_results)
 
         if len(brands) == 0:
             product_results = product_results
+
         else:
             filtered_brands = []
             for brand in brands:

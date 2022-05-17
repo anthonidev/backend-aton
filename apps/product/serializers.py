@@ -13,7 +13,6 @@ class CategorySerializer(serializers.ModelSerializer):
             'photo',
             'slug',
             'description',
-            'get_absolute_url'
         ]
 
 
@@ -69,7 +68,6 @@ class CharacteristicProductSerializer(serializers.ModelSerializer):
         model = CharacteristicProduct
         
         fields = [
-            
             'title',
         ]
 class ProductImageSerializer(serializers.ModelSerializer):

@@ -1,8 +1,10 @@
-from django.db import models
-from apps.product.models import Product
-from apps.account.Countries import Countries
 from datetime import datetime
+
 from django.contrib.auth import get_user_model
+from django.db import models
+
+from apps.account.Countries import Countries
+from apps.product.models import Product
 
 User = get_user_model()
 

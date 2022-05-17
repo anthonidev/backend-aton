@@ -1,11 +1,9 @@
 from datetime import datetime
+
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        PermissionsMixin)
 from django.db import models
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    PermissionsMixin,
-    BaseUserManager,
-)
 from apps.account.models import UserProfile
 from apps.cart.models import Cart
 

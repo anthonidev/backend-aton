@@ -1,6 +1,7 @@
-from django.db import models
 from datetime import datetime
+
 from cloudinary.models import CloudinaryField
+from django.db import models
 from django.template.defaultfilters import slugify
 
 

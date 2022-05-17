@@ -1,15 +1,17 @@
 from math import e
-from django.shortcuts import render
+
 from django.conf import settings
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.shortcuts import render
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from apps.cart.models import Cart, CartItem
 from apps.coupon.models import Coupon
 from apps.order.models import Order, OrderItem
 from apps.product.models import Product
 from apps.shipping.models import Shipping
-from django.core.mail import send_mail
 
 # Create your views here.
 

@@ -108,8 +108,7 @@ class ProcessPaymentView(APIView):
     def post(self, request, format=None):
         user = self.request.user
         data = self.request.data
-  
-      
+
         shipping_id = str(data['shipping_id'])
         coupon_code = str(data['coupon_code'])
 
@@ -174,8 +173,6 @@ class ProcessPaymentView(APIView):
                 if discount_amount < total_amount:
                     total_amount -= discount_amount
 
-      
-
         shipping = Shipping.objects.get(id=int(shipping_id))
 
         shipping_name = shipping.name
@@ -185,21 +182,19 @@ class ProcessPaymentView(APIView):
         total_amount += float(shipping_price)
         total_amount = round(total_amount, 2)
 
-       
-
         for cart_item in cart_items:
-                update_product = Product.objects.get(id=cart_item.product.id)
+            update_product = Product.objects.get(id=cart_item.product.id)
 
-                # encontrar cantidad despues de coompra
-                quantity = int(update_product.quantity) - int(cart_item.count)
+            # encontrar cantidad despues de coompra
+            quantity = int(update_product.quantity) - int(cart_item.count)
 
-                # obtener cantidad de producto por vender
-                sold = int(update_product.sold) + int(cart_item.count)
+            # obtener cantidad de producto por vender
+            sold = int(update_product.sold) + int(cart_item.count)
 
-                # actualizar el producto
-                Product.objects.filter(id=cart_item.product.id).update(
-                    quantity=quantity, sold=sold
-                )
+            # actualizar el producto
+            Product.objects.filter(id=cart_item.product.id).update(
+                quantity=quantity, sold=sold
+            )
 
             # crear orden
         try:
@@ -278,4 +273,3 @@ class ProcessPaymentView(APIView):
             {'success': 'Transaction successful and order was created'},
             status=status.HTTP_200_OK
         )
-      

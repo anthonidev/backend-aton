@@ -9,6 +9,7 @@ class Brand(models.Model):
     is_featured = models.BooleanField(default=False)
     photo = CloudinaryField('Image', overwrite=True,
                             format="png", blank=True, null=True)
+
     def __str__(self):
         return self.title
 
@@ -68,8 +69,10 @@ class Product(models.Model):
 
     def get_category(self):
         return self.category.title
+
     def get_brand(self):
-            return self.brand.title
+        return self.brand.title
+
     def get_absolute_url(self):
         return '/%s/%s/' % (self.category.slug, self.slug)
 

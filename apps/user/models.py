@@ -17,7 +17,7 @@ class UserAccountManager(BaseUserManager):
 
         profile = UserProfile.objects.create(user=user)
         profile.save()
-        
+
         shopping_cart = Cart.objects.create(user=user)
         shopping_cart.save()
 

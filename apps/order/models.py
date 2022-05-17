@@ -14,7 +14,6 @@ class Order(models.Model):
         delivered = 'delivered'
         cancelled = 'cancelled'
 
-
     status = models.CharField(
         max_length=50, choices=OrderStatus.choices, default=OrderStatus.not_processed)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,6 +33,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.transaction_id
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)

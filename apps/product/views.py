@@ -123,7 +123,7 @@ class ProductDetailView(generics.ListAPIView):
             characteristic = CharacteristicProductSerializer(
                 characteristic, many=True)
             images = ProductImageSerializer(images, many=True)
-          
+
             return Response({
                 'characteristic': characteristic.data,
                 'images': images.data,

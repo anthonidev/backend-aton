@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Order
 
+
 class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -13,5 +14,3 @@ class OrdersSerializer(serializers.ModelSerializer):
             'address_line_1',
             'address_line_2',
         ]
-    
-        

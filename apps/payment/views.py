@@ -19,6 +19,7 @@ from apps.shipping.models import Shipping
 
 
 class GetPaymentTotalView(APIView):
+
     def get(self, request, format=None):
         user = self.request.user
 
@@ -43,7 +44,8 @@ class GetPaymentTotalView(APIView):
             cart_items = CartItem.objects.filter(cart=cart)
 
             for cart_item in cart_items:
-                if not Product.objects.filter(id=cart_item.product.id).exists():
+                if not Product.objects.filter(
+                        id=cart_item.product.id).exists():
                     return Response(
                         {"error": "A proudct with ID provided does not exist"},
                         status=status.HTTP_404_NOT_FOUND,
@@ -58,14 +60,14 @@ class GetPaymentTotalView(APIView):
                 total_after_coupon = 0.0
                 for cart_item in cart_items:
                     total_amount += float(cart_item.product.price) * float(
-                        cart_item.count
-                    )
+                        cart_item.count)
 
                 original_price = round(total_amount, 2)
                 # Cupones
                 if coupon_code != "" and coupon_code != "default":
                     # Revisar si cupon de precio fijo es valido
-                    if Coupon.objects.filter(code__iexact=coupon_code).exists():
+                    if Coupon.objects.filter(
+                            code__iexact=coupon_code).exists():
                         price_coupon = Coupon.objects.get(code=coupon_code)
 
                     discount_amount = float(price_coupon.value)
@@ -106,13 +108,15 @@ class GetPaymentTotalView(APIView):
         except:
             return Response(
                 {
-                    "error": "Something went wrong when retrieving payment total information"
+                    "error":
+                    "Something went wrong when retrieving payment total information"
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
 class ProcessPaymentView(APIView):
+
     def post(self, request, format=None):
         user = self.request.user
         data = self.request.data
@@ -130,9 +134,8 @@ class ProcessPaymentView(APIView):
 
         # revisar si datos de shipping son validos
         if not Shipping.objects.filter(id__iexact=shipping_id).exists():
-            return Response(
-                {"error": "Invalid shipping option"}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"error": "Invalid shipping option"},
+                            status=status.HTTP_404_NOT_FOUND)
 
         cart = Cart.objects.get(user=user)
 
@@ -150,18 +153,21 @@ class ProcessPaymentView(APIView):
         for cart_item in cart_items:
             if not Product.objects.filter(id=cart_item.product.id).exists():
                 return Response(
-                    {"error": "Transaction failed, a proudct ID does not exist"},
+                    {
+                        "error":
+                        "Transaction failed, a proudct ID does not exist"
+                    },
                     status=status.HTTP_404_NOT_FOUND,
                 )
             if int(cart_item.count) > int(cart_item.product.quantity):
-                return Response(
-                    {"error": "Not enough items in stock"}, status=status.HTTP_200_OK
-                )
+                return Response({"error": "Not enough items in stock"},
+                                status=status.HTTP_200_OK)
 
         total_amount = 0.0
 
         for cart_item in cart_items:
-            total_amount += float(cart_item.product.price) * float(cart_item.count)
+            total_amount += float(cart_item.product.price) * float(
+                cart_item.count)
 
         # Cupones
 
@@ -196,8 +202,7 @@ class ProcessPaymentView(APIView):
 
             # actualizar el producto
             Product.objects.filter(id=cart_item.product.id).update(
-                quantity=quantity, sold=sold
-            )
+                quantity=quantity, sold=sold)
 
             # crear orden
         try:
@@ -218,7 +223,10 @@ class ProcessPaymentView(APIView):
             )
         except:
             return Response(
-                {"error": "Transaction succeeded but failed to create the order"},
+                {
+                    "error":
+                    "Transaction succeeded but failed to create the order"
+                },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
@@ -237,7 +245,8 @@ class ProcessPaymentView(APIView):
             except:
                 return Response(
                     {
-                        "error": "Transaction succeeded and order created, but failed to create an order item"
+                        "error":
+                        "Transaction succeeded and order created, but failed to create an order item"
                     },
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
@@ -245,14 +254,11 @@ class ProcessPaymentView(APIView):
         try:
             send_mail(
                 "Your Order Details",
-                "Hey "
-                + full_name
-                + ","
-                + "\n\nWe recieved your order!"
-                + "\n\nGive us some time to process your order and ship it out to you."
-                + "\n\nYou can go on your user dashboard to check the status of your order."
-                + "\n\nSincerely,"
-                + "\nShop Time",
+                "Hey " + full_name + "," + "\n\nWe recieved your order!" +
+                "\n\nGive us some time to process your order and ship it out to you."
+                +
+                "\n\nYou can go on your user dashboard to check the status of your order."
+                + "\n\nSincerely," + "\nShop Time",
                 "mail@mail.com",
                 [user.email],
                 fail_silently=False,
@@ -260,7 +266,8 @@ class ProcessPaymentView(APIView):
         except:
             return Response(
                 {
-                    "error": "Transaction succeeded and order created, but failed to send email"
+                    "error":
+                    "Transaction succeeded and order created, but failed to send email"
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
@@ -275,7 +282,8 @@ class ProcessPaymentView(APIView):
         except:
             return Response(
                 {
-                    "error": "Transaction succeeded and order successful, but failed to clear cart"
+                    "error":
+                    "Transaction succeeded and order successful, but failed to clear cart"
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

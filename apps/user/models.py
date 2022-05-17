@@ -10,6 +10,7 @@ from apps.cart.models import Cart
 
 
 class UserAccountManager(BaseUserManager):
+
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("El usuario debe tener un correo electronico")

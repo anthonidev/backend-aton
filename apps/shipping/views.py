@@ -8,16 +8,15 @@ from .serializers import ShippingSerializer
 
 
 class GetShippingView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
     def get(self, request, format=None):
         if Shipping.objects.all().exists():
             shipping_options = Shipping.objects.order_by("price").all()
             shipping_options = ShippingSerializer(shipping_options, many=True)
 
-            return Response(
-                {"shipping": shipping_options.data}, status=status.HTTP_200_OK
-            )
+            return Response({"shipping": shipping_options.data},
+                            status=status.HTTP_200_OK)
         else:
             return Response(
                 {"error": "No shipping options available"},

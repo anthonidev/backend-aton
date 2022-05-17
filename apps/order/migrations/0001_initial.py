@@ -43,11 +43,14 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("transaction_id", models.CharField(max_length=255, unique=True)),
-                ("amount", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("transaction_id", models.CharField(max_length=255,
+                                                    unique=True)),
+                ("amount", models.DecimalField(decimal_places=2,
+                                               max_digits=5)),
                 ("full_name", models.CharField(max_length=255)),
                 ("address_line_1", models.CharField(max_length=255)),
-                ("address_line_2", models.CharField(blank=True, max_length=255)),
+                ("address_line_2", models.CharField(blank=True,
+                                                    max_length=255)),
                 ("district", models.CharField(max_length=20)),
                 (
                     "city",
@@ -86,8 +89,10 @@ class Migration(migrations.Migration):
                 ("telephone_number", models.CharField(max_length=255)),
                 ("shipping_name", models.CharField(max_length=255)),
                 ("shipping_time", models.CharField(max_length=255)),
-                ("shipping_price", models.DecimalField(decimal_places=2, max_digits=5)),
-                ("date_issued", models.DateTimeField(default=datetime.datetime.now)),
+                ("shipping_price",
+                 models.DecimalField(decimal_places=2, max_digits=5)),
+                ("date_issued",
+                 models.DateTimeField(default=datetime.datetime.now)),
                 (
                     "user",
                     models.ForeignKey(
@@ -112,12 +117,13 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=255)),
                 ("price", models.DecimalField(decimal_places=2, max_digits=5)),
                 ("count", models.IntegerField()),
-                ("date_added", models.DateTimeField(default=datetime.datetime.now)),
+                ("date_added",
+                 models.DateTimeField(default=datetime.datetime.now)),
                 (
                     "order",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="order.order"
-                    ),
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="order.order"),
                 ),
                 (
                     "product",

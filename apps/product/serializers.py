@@ -8,6 +8,7 @@ from .models import ProductImage
 
 
 class CategorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Category
 
@@ -22,6 +23,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BrandSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Brand
         fields = [
@@ -33,6 +35,7 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = [
@@ -69,6 +72,7 @@ class ProductSerializer(serializers.ModelSerializer):
 #             'quantity',
 #         ]
 class CharacteristicProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CharacteristicProduct
 
@@ -78,6 +82,7 @@ class CharacteristicProductSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProductImage
         fields = [

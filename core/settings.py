@@ -9,11 +9,9 @@ import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 env = environ.Env()
 environ.Env.read_env()
 ENVIRONMENT = env
-
 
 cloudinary.config(
     cloud_name=os.environ.get("CLOUD_NAME"),
@@ -24,11 +22,9 @@ cloudinary.config(
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DOMAIN = os.environ.get("DOMAIN")
 
-
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -100,7 +96,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
-    "default": env.db("HEROKU_POSTGRESQL_MAROON_URL", default="postgres:///aton"),
+    "default": env.db("HEROKU_POSTGRESQL_MAROON_URL",
+                      default="postgres:///aton"),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
@@ -133,19 +130,22 @@ PASSWORD_HASHERS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME":
+        "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME":
+        "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME":
+        "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME":
+        "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 LANGUAGE_CODE = "en-us"
 
@@ -157,7 +157,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTHENTICATION_BACKENDS = (
@@ -167,38 +166,51 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 9,
+    "DEFAULT_PERMISSION_CLASSES":
+    ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
+    "DEFAULT_AUTHENTICATION_CLASSES":
+    ("rest_framework_simplejwt.authentication.JWTAuthentication", ),
+    "DEFAULT_PAGINATION_CLASS":
+    "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE":
+    9,
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT",),
+    "AUTH_HEADER_TYPES": ("JWT", ),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESFH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken", ),
 }
 DJOSER = {
-    "LOGIN_FIELD": "email",
-    "USER_CREATE_PASSWORD_RETYPE": True,
-    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_CONFIRMATION_EMAIL": True,
-    "SET_USERNAME_RETYPE": True,
-    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-    "SET_PASSWORD_RETYPE": True,
-    "PASSWORD_RESET_CONFIRM_RETYPE": True,
-    "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": True,
-    "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
+    "LOGIN_FIELD":
+    "email",
+    "USER_CREATE_PASSWORD_RETYPE":
+    True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION":
+    True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION":
+    True,
+    "SEND_CONFIRMATION_EMAIL":
+    True,
+    "SET_USERNAME_RETYPE":
+    True,
+    "PASSWORD_RESET_CONFIRM_URL":
+    "password/reset/confirm/{uid}/{token}",
+    "SET_PASSWORD_RETYPE":
+    True,
+    "PASSWORD_RESET_CONFIRM_RETYPE":
+    True,
+    "USERNAME_RESET_CONFIRM_URL":
+    "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL":
+    "activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL":
+    True,
+    "SOCIAL_AUTH_TOKEN_STRATEGY":
+    "djoser.social.token.jwt.TokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
         "http://localhost:8000/google",
         "http://localhost:8000/facebook",
@@ -214,7 +226,6 @@ DJOSER = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 AUTH_USER_MODEL = "user.UserAccount"
-
 
 if not DEBUG:
     DEFAULT_FROM_EMAIL = "Vudera - Academia de Software <mail@vudera.com>"

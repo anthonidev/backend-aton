@@ -8,27 +8,34 @@ from django.template.defaultfilters import slugify
 class Brand(models.Model):
     title = models.CharField(max_length=200, unique=True)
     is_featured = models.BooleanField(default=False)
-    photo = CloudinaryField(
-        "Image", overwrite=True, format="png", blank=True, null=True
-    )
+    photo = CloudinaryField("Image",
+                            overwrite=True,
+                            format="png",
+                            blank=True,
+                            null=True)
 
     def __str__(self):
         return self.title
 
 
 class Category(models.Model):
+
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
     title = models.CharField(max_length=200, unique=True)
-    parent = models.ForeignKey(
-        "self", related_name="children", on_delete=models.CASCADE, blank=True, null=True
-    )
+    parent = models.ForeignKey("self",
+                               related_name="children",
+                               on_delete=models.CASCADE,
+                               blank=True,
+                               null=True)
     is_featured = models.BooleanField(default=False)
-    photo = CloudinaryField(
-        "Image", overwrite=True, format="jpg", blank=True, null=True
-    )
+    photo = CloudinaryField("Image",
+                            overwrite=True,
+                            format="jpg",
+                            blank=True,
+                            null=True)
     slug = models.SlugField(max_length=255, null=True, blank=True)
     description = models.TextField(max_length=200)
 
@@ -48,14 +55,16 @@ class Category(models.Model):
 
 class Product(models.Model):
 
-    category = models.ForeignKey(
-        Category, related_name="products", on_delete=models.CASCADE
-    )
+    category = models.ForeignKey(Category,
+                                 related_name="products",
+                                 on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
 
-    parent = models.ForeignKey(
-        "self", related_name="variants", on_delete=models.CASCADE, blank=True, null=True
-    )
+    parent = models.ForeignKey("self",
+                               related_name="variants",
+                               on_delete=models.CASCADE,
+                               blank=True,
+                               null=True)
 
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -72,7 +81,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        ordering = ("-date_added",)
+        ordering = ("-date_added", )
 
     def get_category(self):
         return self.category.title

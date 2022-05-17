@@ -7,6 +7,7 @@ from .models import OrderItem
 
 
 class OrderAdmin(admin.ModelAdmin):
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -20,8 +21,8 @@ class OrderAdmin(admin.ModelAdmin):
         "id",
         "transaction_id",
     )
-    list_filter = ("status",)
-    list_editable = ("status",)
+    list_filter = ("status", )
+    list_editable = ("status", )
     list_per_page = 25
 
 
@@ -29,6 +30,7 @@ admin.site.register(Order, OrderAdmin)
 
 
 class OrderItemAdmin(admin.ModelAdmin):
+
     def has_delete_permission(self, request, obj=None):
         return False
 

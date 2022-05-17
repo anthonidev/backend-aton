@@ -26,7 +26,7 @@ from .serializers import ProductSerializer
 
 class ListBrandView(generics.ListAPIView):
     serializer_class = BrandSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
     pagination_class = None
 
     def get(self, request, format=None, *args, **kwargs):
@@ -39,7 +39,7 @@ class ListBrandView(generics.ListAPIView):
 
 class ListCategoryView(generics.ListAPIView):
     pagination_class = None
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
     def get(self, request, format=None, *args, **kwargs):
         categories = Category.objects.all()
@@ -77,15 +77,14 @@ class ListCategoryView(generics.ListAPIView):
 class ListProductHomeView(generics.ListAPIView):
     serializer_class = ProductSerializer
     pagination_class = PageNumberPagination
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
     def get(self, request, format=None, *args, **kwargs):
         products = Product.objects.filter(is_featured=True)
         page = self.paginate_queryset(products)
         if products and page is not None:
             return self.get_paginated_response(
-                self.serializer_class(products, many=True).data
-            )
+                self.serializer_class(products, many=True).data)
         return Response("Not found", status=status.HTTP_404_NOT_FOUND)
 
 
@@ -93,11 +92,11 @@ class ListProductView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = PageNumberPagination
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
 
 class ProductDetailView(generics.ListAPIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
     pagination_class = None
     serializer_class = ProductSerializer
 
@@ -106,23 +105,18 @@ class ProductDetailView(generics.ListAPIView):
         if Product.objects.filter(slug=slug).exists():
             product = Product.objects.get(slug=slug)
 
-            related_products = (
-                product.category.products.filter(parent=None)
-                .order_by("?")
-                .exclude(id=product.id)
-            )
+            related_products = (product.category.products.filter(
+                parent=None).order_by("?").exclude(id=product.id))
 
             if product.variants.all():
-                products_colors = list(product.variants.all().exclude(id=product.id))
+                products_colors = list(
+                    product.variants.all().exclude(id=product.id))
             elif product.parent:
                 products_colors = list(
-                    product.parent.variants.all().exclude(id=product.id)
-                )
+                    product.parent.variants.all().exclude(id=product.id))
                 related_products = list(
                     product.category.products.filter(parent=None).exclude(
-                        id=product.parent.id
-                    )
-                )
+                        id=product.parent.id))
 
                 products_colors.append(product.parent)
             else:
@@ -135,22 +129,28 @@ class ProductDetailView(generics.ListAPIView):
             characteristic = []
             images = []
             if CharacteristicProduct.objects.filter(product=product).exists():
-                characteristic = CharacteristicProduct.objects.filter(product=product)
+                characteristic = CharacteristicProduct.objects.filter(
+                    product=product)
             if ProductImage.objects.filter(product=product).exists():
                 images = ProductImage.objects.filter(product=product)
 
-            characteristic = CharacteristicProductSerializer(characteristic, many=True)
+            characteristic = CharacteristicProductSerializer(characteristic,
+                                                             many=True)
             images = ProductImageSerializer(images, many=True)
 
             return Response(
                 {
-                    "characteristic": characteristic.data,
-                    "images": images.data,
-                    "related": self.serializer_class(related_products, many=True).data[
-                        :4
-                    ],
-                    "colors": self.serializer_class(products_colors, many=True).data,
-                    "product": self.serializer_class(product).data,
+                    "characteristic":
+                    characteristic.data,
+                    "images":
+                    images.data,
+                    "related":
+                    self.serializer_class(related_products,
+                                          many=True).data[:4],
+                    "colors":
+                    self.serializer_class(products_colors, many=True).data,
+                    "product":
+                    self.serializer_class(product).data,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -165,7 +165,7 @@ class ProductDetailView(generics.ListAPIView):
 class ListBySearchView(generics.ListAPIView):
     serializer_class = ProductSerializer
     pagination_class = PageNumberPagination
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request, format=None, *args, **kwargs):
         data = self.request.data
@@ -186,7 +186,8 @@ class ListBySearchView(generics.ListAPIView):
                 filtered_categories.append(cat)
             print(product_results)
 
-            product_results = product_results.filter(category__in=filtered_categories)
+            product_results = product_results.filter(
+                category__in=filtered_categories)
             print(product_results)
 
         if len(brands) == 0:
@@ -198,12 +199,8 @@ class ListBySearchView(generics.ListAPIView):
                 filtered_brands.append(brand)
             product_results = product_results.filter(brand__in=filtered_brands)
 
-        if not (
-            sort_by == "date_added"
-            or sort_by == "price"
-            or sort_by == "sold"
-            or sort_by == "name"
-        ):
+        if not (sort_by == "date_added" or sort_by == "price"
+                or sort_by == "sold" or sort_by == "name"):
             sort_by = "date_added"
 
         if order == "desc":
@@ -233,6 +230,5 @@ class ListBySearchView(generics.ListAPIView):
         page = self.paginate_queryset(product_results)
         if product_results and page is not None:
             return self.get_paginated_response(
-                self.serializer_class(product_results, many=True).data
-            )
+                self.serializer_class(product_results, many=True).data)
         return Response("Not found", status=status.HTTP_404_NOT_FOUND)

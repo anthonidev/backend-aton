@@ -4,17 +4,24 @@ from cmath import log
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework import generics, permissions, status
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import (Brand, Category, CharacteristicProduct, Product,
-                     ProductImage)
-from .serializers import (BrandSerializer, CategorySerializer,
-                          CharacteristicProductSerializer,
-                          ProductImageSerializer, ProductSerializer)
+from .models import Brand
+from .models import Category
+from .models import CharacteristicProduct
+from .models import Product
+from .models import ProductImage
+from .serializers import BrandSerializer
+from .serializers import CategorySerializer
+from .serializers import CharacteristicProductSerializer
+from .serializers import ProductImageSerializer
+from .serializers import ProductSerializer
 
 
 class ListBrandView(generics.ListAPIView):

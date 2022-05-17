@@ -2,10 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import Cart
+from .models import CartItem
 from apps.product.models import Product
 from apps.product.serializers import ProductSerializer
-
-from .models import Cart, CartItem
 
 
 def getCart(user, request):

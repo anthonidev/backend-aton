@@ -7,9 +7,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.cart.models import Cart, CartItem
+from apps.cart.models import Cart
+from apps.cart.models import CartItem
 from apps.coupon.models import Coupon
-from apps.order.models import Order, OrderItem
+from apps.order.models import Order
+from apps.order.models import OrderItem
 from apps.product.models import Product
 from apps.shipping.models import Shipping
 

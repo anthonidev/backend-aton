@@ -51,6 +51,8 @@ MAIN_APPS = [
     'apps.wishlist',
     'apps.shipping',
     'apps.coupon',
+    'apps.order',
+    'apps.payment',
 ]
 
 THIRD_PARTY_APPS = [
@@ -107,10 +109,12 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://localhost:8000',
 
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
 
     'https://frontend-surf-academy.herokuapp.com',
     'https://backend-surf-academy.herokuapp.com'
@@ -118,9 +122,12 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://127.0.0.1:3001',
 
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+
 
     'https://frontend-surf-academy.herokuapp.com',
     'https://backend-surf-academy.herokuapp.com'
@@ -191,9 +198,16 @@ SIMPLE_JWT = {
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'SEND_CONFIRMATION_EMAIL': False,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SET_USERNAME_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'SEND_ACTIVATION_EMAIL': False,
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
     'SERIALIZERS': {

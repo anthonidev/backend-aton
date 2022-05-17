@@ -10,6 +10,5 @@ urlpatterns = [
     path('brands', ListBrandView.as_view()),
     path('products', ListProductView.as_view()),
     path('filter', ListBySearchView.as_view()),
-    
     path('<slug>', ProductDetailView.as_view()),
 ]

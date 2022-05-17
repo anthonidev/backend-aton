@@ -9,7 +9,6 @@ class Brand(models.Model):
     is_featured = models.BooleanField(default=False)
     photo = CloudinaryField('Image', overwrite=True,
                             format="png", blank=True, null=True)
-
     def __str__(self):
         return self.title
 

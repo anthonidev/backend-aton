@@ -45,7 +45,7 @@ class GetItemsView(APIView):
             result = getCart(user,request)
             total_cost=getTotalCart(user)
             total_items=getItemTotalCart(user)
-            return Response({'cart': result,'total_cost':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
+            return Response({'items': result,'amount':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
         except:
             return Response({'error': 'Something went wrong when retrieving cart items'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -81,7 +81,7 @@ class AddItemView(APIView):
                     result = getCart(user,request)
                     total_cost=getTotalCart(user)
                     total_items=getItemTotalCart(user)
-                    return Response({'cart': result,'total_cost':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
+                    return Response({'items': result,'amount':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
             if int(product.quantity) > 0:
                 CartItem.objects.create(
                     product=product, cart=cart, count=count)
@@ -94,7 +94,7 @@ class AddItemView(APIView):
                     result = getCart(user,request)
                     total_cost=getTotalCart(user)
                     total_items=getItemTotalCart(user)
-                    return Response({'cart': result,'total_cost':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
+                    return Response({'items': result,'amount':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
                 else:
                     return Response({'error': 'Not enough of this item in stock'}, status=status.HTTP_200_OK)
         except:
@@ -132,7 +132,7 @@ class UpdateItemView(APIView):
                 result = getCart(user,request)
                 total_cost=getTotalCart(user)
                 total_items=getItemTotalCart(user)
-                return Response({'cart': result,'total_cost':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
+                return Response({'items': result,'amount':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Not enough of this item in stock'}, status=status.HTTP_200_OK)
         except:
@@ -177,7 +177,7 @@ class RemoveItemView(APIView):
                 result = getCart(user,request)
                 total_cost=getTotalCart(user)
                 total_items=getItemTotalCart(user)
-            return Response({'cart': result,'total_cost':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
+            return Response({'items': result,'amount':total_cost,'total_items':total_items}, status=status.HTTP_200_OK)
         except:
             return Response({'error': 'Something went wrong when removing item'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

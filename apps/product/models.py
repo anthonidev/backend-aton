@@ -31,6 +31,11 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return '/%s/' % (self.slug)
+    
+    def get_parent(self):
+        return self.parent.title
+    def get_parent_slug(self):
+        return self.parent.slug
 
     def save(self, *args, **kwargs):
         to_assign = slugify(self.title)

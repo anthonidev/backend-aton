@@ -13,6 +13,8 @@ class CategorySerializer(serializers.ModelSerializer):
             'photo',
             'slug',
             'description',
+            'get_parent',
+            'get_parent_slug',
         ]
 
 

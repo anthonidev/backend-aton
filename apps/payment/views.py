@@ -122,6 +122,8 @@ class ProcessPaymentView(APIView):
         telephone_number = data['telephone_number']
 
         # revisar si datos de shipping son validos
+        
+
         if not Shipping.objects.filter(id__iexact=shipping_id).exists():
             return Response(
                 {'error': 'Invalid shipping option'},
@@ -202,28 +204,44 @@ class ProcessPaymentView(APIView):
                 )
 
             # crear orden
+        
+        # print("user",user)
+        # print("code",f'{full_name} {total_amount} {postal_zip_code}')
+        # print("amout",total_amount)
+        # print("fullname",full_name)
+        # print("address_line_1",address_line_1)
+        # print("address_line_2",address_line_2)
+        # print("city",city)
+        # print("postal_zip_code",postal_zip_code)
+        # print("telephone_number",telephone_number)
+        # print("shipping_name",shipping_name)
+        # print("shipping_time",shipping_time)
+        # print("shipping_price",float(shipping_price))
+        # print("district",district)
+       
         try:
             order = Order.objects.create(
                 user=user,
-                transaction_id=full_name+total_amount+postal_zip_code,
+                transaction_id=f'{full_name} {total_amount} {postal_zip_code}',
                 amount=total_amount,
                 full_name=full_name,
                 address_line_1=address_line_1,
                 address_line_2=address_line_2,
+                district=district,
                 city=city,
                 postal_zip_code=postal_zip_code,
                 telephone_number=telephone_number,
                 shipping_name=shipping_name,
                 shipping_time=shipping_time,
-                shipping_price=float(shipping_price),
-                district=district,
+                shipping_price=float(shipping_price)
             )
-        except:
+        except (RuntimeError, TypeError, NameError):
+            print(NameError)
             return Response(
                 {'error': 'Transaction succeeded but failed to create the order'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
+        print('order',order)
         for cart_item in cart_items:
             try:
                 # agarrar el producto
@@ -236,30 +254,32 @@ class ProcessPaymentView(APIView):
                     price=cart_item.product.price,
                     count=cart_item.count
                 )
-            except:
+            except (RuntimeError, TypeError, NameError):
+                print(NameError)
+                
                 return Response(
                     {'error': 'Transaction succeeded and order created, but failed to create an order item'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
-        try:
-            send_mail(
-                'Your Order Details',
-                'Hey ' + full_name + ','
-                + '\n\nWe recieved your order!'
-                + '\n\nGive us some time to process your order and ship it out to you.'
-                + '\n\nYou can go on your user dashboard to check the status of your order.'
-                + '\n\nSincerely,'
-                + '\nShop Time',
-                'mail@mail.com',
-                [user.email],
-                fail_silently=False
-            )
-        except:
-            return Response(
-                {'error': 'Transaction succeeded and order created, but failed to send email'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        # try:
+        #     send_mail(
+        #         'Your Order Details',
+        #         'Hey ' + full_name + ','
+        #         + '\n\nWe recieved your order!'
+        #         + '\n\nGive us some time to process your order and ship it out to you.'
+        #         + '\n\nYou can go on your user dashboard to check the status of your order.'
+        #         + '\n\nSincerely,'
+        #         + '\nShop Time',
+        #         'mail@mail.com',
+        #         [user.email],
+        #         fail_silently=False
+        #     )
+        # except:
+        #     return Response(
+        #         {'error': 'Transaction succeeded and order created, but failed to send email'},
+        #         status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        #     )
 
         try:
             # Vaciar carrito de compras
